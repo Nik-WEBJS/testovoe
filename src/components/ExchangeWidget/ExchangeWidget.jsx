@@ -17,6 +17,7 @@ const ExchangeWidget = () => {
   const [estimatedAmount, setEstimatedAmount] = useState(null);
   const [error, setError] = useState(null);
   const [minimalAmount, setMinimalAmount] = useState(0);
+  const [timer, setTimer] = useState(null);
 
   useEffect(() => {
     const loadCurrencies = async () => {
@@ -27,7 +28,6 @@ const ExchangeWidget = () => {
         setError(error.message);
       }
     };
-
     loadCurrencies();
   }, []);
 
@@ -63,6 +63,35 @@ const ExchangeWidget = () => {
     }
   }, [selectedCurrencyFrom, selectedCurrencyTo]);
 
+  const handleAmountChange = (value) => {
+    setAmount(value);
+    setError(null);
+
+    if (value < minimalAmount) {
+      setError(`Сумма не может быть меньше минимальной: ${minimalAmount}`);
+      return;
+    }
+
+    if (timer) {
+      clearTimeout(timer);
+    }
+
+    const newTimer = setTimeout(async () => {
+      try {
+        const estimated = await fetchEstimatedAmount(
+          value,
+          selectedCurrencyFrom,
+          selectedCurrencyTo
+        );
+        setEstimatedAmount(estimated);
+      } catch (error) {
+        setError(error.message);
+      }
+    }, 500);
+
+    setTimer(newTimer);
+  };
+
   const handleSwapCurrencies = () => {
     setError(null);
     setSelectedCurrencyFrom(selectedCurrencyTo);
@@ -79,17 +108,7 @@ const ExchangeWidget = () => {
             <TextField
               required
               value={amount || ""}
-              onChange={(e) => {
-                const value = e.target.value;
-                if (value >= minimalAmount) {
-                  setAmount(e.target.value);
-                  setError(null);
-                } else {
-                  setError(
-                    `Сумма не может быть меньше минимальной: ${minimalAmount}`
-                  );
-                }
-              }}
+              onChange={(e) => handleAmountChange(e.target.value)}
               variant="outlined"
               sx={{
                 minWidth: 320,
