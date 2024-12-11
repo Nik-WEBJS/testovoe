@@ -99,6 +99,39 @@ const ExchangeWidget = ({ setError }) => {
     setTimer(newTimer);
   };
 
+  const handleEstimatedAmountChange = (value) => {
+    if (value < minimalAmount) {
+      setErrorWidget(
+        `Сумма не может быть меньше минимальной: ${minimalAmount}`
+      );
+      setError(`Сумма не может быть меньше минимальной: ${minimalAmount}`);
+      return;
+    }
+
+    setEstimatedAmount(value);
+    setErrorWidget(null);
+    setError(null);
+    if (timer) {
+      clearTimeout(timer);
+    }
+
+    const newTimer = setTimeout(async () => {
+      try {
+        const estimated = await fetchEstimatedAmount(
+          value,
+          selectedCurrencyTo,
+          selectedCurrencyFrom
+        );
+        setAmount(estimated);
+      } catch (error) {
+        setErrorWidget(error.message);
+        setError(error.message);
+      }
+    }, 500);
+
+    setTimer(newTimer);
+  };
+
   const handleSwapCurrencies = () => {
     setErrorWidget(null);
     setError(null);
@@ -172,6 +205,7 @@ const ExchangeWidget = ({ setError }) => {
             <TextField
               required
               value={estimatedAmount || ""}
+              onChange={(e) => handleEstimatedAmountChange(e.target.value)}
               variant="outlined"
               className={styles.txtField}
               sx={{
