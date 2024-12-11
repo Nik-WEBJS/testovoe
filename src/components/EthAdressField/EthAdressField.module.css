@@ -1,0 +1,15 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-top: 32px;
+  gap: 8px;
+  p {
+    margin: 0px;
+  }
+  .ethField {
+    background-color: #f9f9f9;
+    border: 1px solid #e3ebef;
+    border-radius: 5px;
+  }
+}
