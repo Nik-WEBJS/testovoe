@@ -78,11 +78,12 @@ const ExchangeWidget = () => {
           <div className={styles.leftCript}>
             <TextField
               required
-              value={amount}
+              value={amount || ""}
               onChange={(e) => {
                 const value = e.target.value;
                 if (value >= minimalAmount) {
                   setAmount(e.target.value);
+                  setError(null);
                 } else {
                   setError(
                     `Сумма не может быть меньше минимальной: ${minimalAmount}`
@@ -156,7 +157,7 @@ const ExchangeWidget = () => {
             />
             <FormControl sx={{ minWidth: 120, maxWidth: 150, margin: 0 }}>
               <Select
-                value={selectedCurrencyTo}
+                value={selectedCurrencyTo || ""}
                 onChange={(e) => {
                   const newToCurrency = e.target.value;
                   setSelectedCurrencyTo(newToCurrency);
