@@ -5,6 +5,16 @@
   width: 100%;
   margin: 0 auto;
 
+  .txtField{
+    @media (max-width: 970px) {
+      min-width: 200px;
+    }
+  }
+
+  @media (max-width: 970px) {
+    flex-direction: column;
+  }
+
   .wrapper {
     display: flex;
     flex-direction: column;

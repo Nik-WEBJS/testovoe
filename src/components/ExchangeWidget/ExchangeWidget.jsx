@@ -9,13 +9,14 @@ import {
 } from "../../services/apiService";
 import styles from "./ExchangeWidget.module.css";
 
-const ExchangeWidget = () => {
+// eslint-disable-next-line react/prop-types
+const ExchangeWidget = ({ setError }) => {
   const [currencies, setCurrencies] = useState([]);
   const [selectedCurrencyFrom, setSelectedCurrencyFrom] = useState("");
   const [selectedCurrencyTo, setSelectedCurrencyTo] = useState("");
   const [amount, setAmount] = useState("");
   const [estimatedAmount, setEstimatedAmount] = useState(null);
-  const [error, setError] = useState(null);
+  const [error, setErrorWidget] = useState(null);
   const [minimalAmount, setMinimalAmount] = useState(0);
   const [timer, setTimer] = useState(null);
 
@@ -25,6 +26,7 @@ const ExchangeWidget = () => {
         const data = await getAvailableCurrencies();
         setCurrencies(data);
       } catch (error) {
+        setErrorWidget(error.message);
         setError(error.message);
       }
     };
@@ -55,6 +57,7 @@ const ExchangeWidget = () => {
           );
           setEstimatedAmount(estimated);
         } catch (error) {
+          setErrorWidget(error.message);
           setError(error.message);
         }
       };
@@ -65,11 +68,15 @@ const ExchangeWidget = () => {
 
   const handleAmountChange = (value) => {
     if (value < minimalAmount) {
+      setErrorWidget(
+        `Сумма не может быть меньше минимальной: ${minimalAmount}`
+      );
       setError(`Сумма не может быть меньше минимальной: ${minimalAmount}`);
       return;
     }
 
     setAmount(value);
+    setErrorWidget(null);
     setError(null);
     if (timer) {
       clearTimeout(timer);
@@ -84,6 +91,7 @@ const ExchangeWidget = () => {
         );
         setEstimatedAmount(estimated);
       } catch (error) {
+        setErrorWidget(error.message);
         setError(error.message);
       }
     }, 500);
@@ -92,6 +100,7 @@ const ExchangeWidget = () => {
   };
 
   const handleSwapCurrencies = () => {
+    setErrorWidget(null);
     setError(null);
     setSelectedCurrencyFrom(selectedCurrencyTo);
     setSelectedCurrencyTo(selectedCurrencyFrom);
@@ -109,9 +118,11 @@ const ExchangeWidget = () => {
               value={amount || ""}
               onChange={(e) => handleAmountChange(e.target.value)}
               variant="outlined"
+              className={styles.txtField}
               sx={{
-                minWidth: 320,
+                minWidth: 300,
                 maxWidth: 400,
+                width: "100%",
                 margin: 0,
                 "& .MuiOutlinedInput-root": {
                   borderRadius: 5,
@@ -119,7 +130,7 @@ const ExchangeWidget = () => {
                 },
               }}
             />
-            <FormControl sx={{ minWidth: 120, maxWidth: 150, margin: 0 }}>
+            <FormControl sx={{ minWidth: 150, maxWidth: 150, margin: 0 }}>
               <Select
                 value={selectedCurrencyFrom}
                 onChange={(e) => {
@@ -162,8 +173,9 @@ const ExchangeWidget = () => {
               required
               value={estimatedAmount || ""}
               variant="outlined"
+              className={styles.txtField}
               sx={{
-                minWidth: 320,
+                minWidth: 300,
                 maxWidth: 400,
                 margin: 0,
                 backgroundColor: "#f9f9f9",
@@ -173,7 +185,7 @@ const ExchangeWidget = () => {
                 },
               }}
             />
-            <FormControl sx={{ minWidth: 120, maxWidth: 150, margin: 0 }}>
+            <FormControl sx={{ minWidth: 150, maxWidth: 150, margin: 0 }}>
               <Select
                 value={selectedCurrencyTo || ""}
                 onChange={(e) => {

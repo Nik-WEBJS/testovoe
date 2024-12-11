@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import ExchangeWidget from "../components/ExchangeWidget/ExchangeWidget";
 import EthAdressField from "../components/EthAdressField/EthAdressField";
 import styles from "./HomePage.module.css";
 
 const HomePage = () => {
+  const [error, setError] = useState(null);
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
@@ -12,9 +13,9 @@ const HomePage = () => {
           <p>Exchange fast and easy</p>
         </div>
 
-        <ExchangeWidget />
+        <ExchangeWidget setError={setError}/>
 
-        <EthAdressField />
+        <EthAdressField error={error}/>
       </div>
     </div>
   );
