@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import HomePage from "./pages/HomePage";
-import reportWebVitals from "./reportWebVitals";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme({
@@ -32,4 +31,3 @@ root.render(
   </ThemeProvider>
 );
 
-reportWebVitals();
