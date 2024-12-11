@@ -64,14 +64,13 @@ const ExchangeWidget = () => {
   }, [selectedCurrencyFrom, selectedCurrencyTo]);
 
   const handleAmountChange = (value) => {
-    setAmount(value);
-    setError(null);
-
     if (value < minimalAmount) {
       setError(`Сумма не может быть меньше минимальной: ${minimalAmount}`);
       return;
     }
 
+    setAmount(value);
+    setError(null);
     if (timer) {
       clearTimeout(timer);
     }
